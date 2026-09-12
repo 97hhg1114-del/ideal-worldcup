@@ -7,7 +7,7 @@
 > keys, and it files every loser into a folder named after the round it lost in — 32강, 16강, …,
 > 결승, 우승. Copy mode by default, so the originals stay untouched. tkinter + Pillow.
 
-**다운로드** — [v1.0.0 실행 파일](https://github.com/97hhg1114-del/ideal-worldcup/releases/latest) (29MB, 파이썬 설치 불필요)
+**다운로드** — [v1.0.1 실행 파일](https://github.com/97hhg1114-del/ideal-worldcup/releases/latest) (29MB, 파이썬 설치 불필요)
 
 ![대결 화면](docs/match.png)
 
