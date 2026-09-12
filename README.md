@@ -7,6 +7,8 @@
 > keys, and it files every loser into a folder named after the round it lost in — 32강, 16강, …,
 > 결승, 우승. Copy mode by default, so the originals stay untouched. tkinter + Pillow.
 
+**다운로드** — [v1.0.0 실행 파일](https://github.com/97hhg1114-del/ideal-worldcup/releases/latest) (29MB, 파이썬 설치 불필요)
+
 ![대결 화면](docs/match.png)
 
 ## 사용 사례
@@ -39,6 +41,15 @@ python worldcup.py
 
 Windows 환경에서는 `run.bat` 파일을 더블클릭해 실행할 수도 있습니다.
 이미지가 담긴 폴더 경로를 지정한 뒤 **시작하기**를 누르면 진행됩니다.
+
+## exe로 빌드
+
+```bash
+pip install pyinstaller pillow
+build.bat
+```
+
+`dist\IdealWorldcup.exe` 가 나옵니다. 파이썬이 없는 PC에서도 그대로 실행됩니다.
 
 ## 결과 폴더 구조
 
