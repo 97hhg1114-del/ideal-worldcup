@@ -28,6 +28,8 @@ WINNER_DIR = "우승"
 
 HOLD_MS = 2000      # 선택한 이미지를 중앙에 띄우고 유지하는 시간
 ANIM_MS = 380       # 중앙으로 이동하는 애니메이션 시간
+MAX_PIXELS = 50_000_000   # 이보다 큰 이미지는 열지 않는다 (8000x6000 정도까지 허용).
+                          # 1억 픽셀 PNG 한 장이 700MB 넘게 먹는 걸 확인하고 넣은 상한
 
 BG = "#0f1116"
 PANEL = "#171a22"
@@ -90,9 +92,12 @@ class ImageStore:
                 return self.cache[path]
         try:
             img = Image.open(path)
+            if img.width * img.height > MAX_PIXELS:
+                raise ValueError("too many pixels")
+            img.draft("RGB", (2560, 1600))     # JPEG는 디코드 단계에서부터 작게 읽는다
             img = ImageOps.exif_transpose(img)
-            img = img.convert("RGB")
             img.thumbnail((2560, 1600), Image.LANCZOS)
+            img = img.convert("RGB")           # 줄인 뒤에 변환해야 원본 크기 버퍼가 안 생긴다
         except Exception:
             img = Image.new("RGB", (800, 600), (40, 42, 50))
         with self.lock:
@@ -202,7 +207,8 @@ class App(tk.Tk):
         files = []
         if recursive:
             for dirpath, dirnames, filenames in os.walk(root):
-                if os.path.normcase(dirpath).startswith(os.path.normcase(result_root)):
+                d, r = os.path.normcase(dirpath), os.path.normcase(result_root)
+                if d == r or d.startswith(r + os.sep):   # _결과 만. _결과2 같은 형제는 포함
                     dirnames[:] = []
                     continue
                 for fn in filenames:
@@ -233,6 +239,11 @@ class App(tk.Tk):
 
         self.root_dir = root
         self.mode = self.mode_var.get()
+        if self.mode == "move" and not messagebox.askyesno(
+                "이상형 월드컵",
+                "이동 모드는 원본 폴더에서 파일을 빼냅니다.\n"
+                "%d개 파일이 _결과 아래로 옮겨집니다. 계속할까요?" % len(images)):
+            return
         self.errors = []
         self.participants = images[:]
         random.shuffle(self.participants)
